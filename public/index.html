@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Private Sale Registration</title>
+<style>
+body { font-family: Arial; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+form { background:#fff; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:300px; }
+input { width:100%; padding:10px; margin:8px 0; border-radius:4px; border:1px solid #ccc; }
+button { width:100%; padding:10px; border:none; border-radius:4px; background:#4CAF50; color:white; font-size:16px; }
+</style>
+</head>
+<body>
+<form id="registerForm">
+  <h2>Private Sale Registration</h2>
+  <input type="text" name="wallet" placeholder="Solana Wallet" required>
+  <input type="text" name="telegram" placeholder="Telegram Username" required>
+  <input type="text" name="txHash" placeholder="Transaction Hash (optional)">
+  <button type="submit">Register</button>
+  <p id="msg"></p>
+</form>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+        wallet: form.wallet.value,
+        telegram: form.telegram.value,
+        txHash: form.txHash.value
+    };
+
+    const res = await fetch("/.netlify/functions/register", {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    document.getElementById("msg").innerText = result.message;
+    if(result.success) form.reset();
+});
+</script>
+</body>
+</html>
